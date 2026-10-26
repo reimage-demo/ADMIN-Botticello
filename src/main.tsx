@@ -40,6 +40,8 @@ type RequestRow = {
   issueArea?: string;
   issueType?: string;
   severity?: string;
+  needsTow?: boolean;
+  needsRental?: boolean;
   preferredContactMethod?: string;
   service: string;
   description: string;
@@ -634,6 +636,26 @@ function RequestDetail({ row, close }: { row: RequestRow; close: () => void }) {
             <>
               <dt>Contact by</dt>
               <dd>{row.preferredContactMethod}</dd>
+            </>
+          )}
+          {row.kind === "estimate" && (
+            <>
+              <dt>Tow needed</dt>
+              <dd>
+                {row.needsTow === undefined
+                  ? "Not provided"
+                  : row.needsTow
+                    ? "Yes"
+                    : "No"}
+              </dd>
+              <dt>Rental needed</dt>
+              <dd>
+                {row.needsRental === undefined
+                  ? "Not provided"
+                  : row.needsRental
+                    ? "Yes"
+                    : "No"}
+              </dd>
             </>
           )}
           <dt>Service</dt>
