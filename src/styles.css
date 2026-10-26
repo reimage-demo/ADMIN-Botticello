@@ -1,6 +1,6 @@
-@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
 :root {
-  font-family: "DM Sans", sans-serif;
+  font-family: "Inter", Arial, sans-serif;
   color: #1d1d1b;
   background: #f7f7f5;
   font-synthesis: none;
@@ -38,13 +38,13 @@ h1,
 h2,
 h3,
 .brand {
-  font-family: "Barlow Condensed", sans-serif;
+  font-family: "Inter", Arial, sans-serif;
 }
 h1 {
-  font-size: 49px;
+  font-size: 40px;
   letter-spacing: -0.02em;
   margin-bottom: 10px;
-  line-height: 1;
+  line-height: 1.15;
 }
 h2 {
   font-size: 30px;
@@ -72,11 +72,11 @@ textarea:focus-visible {
   font-size: 29px;
   letter-spacing: -0.02em;
   font-weight: 800;
-  line-height: 1;
+  line-height: 1.15;
 }
 .brand small {
   display: block;
-  font-family: "DM Sans", sans-serif;
+  font-family: "Inter", Arial, sans-serif;
   font-size: 8px;
   letter-spacing: 0.22em;
   font-weight: 500;
@@ -97,7 +97,7 @@ textarea:focus-visible {
   background: #1c1c1a;
   color: #fff;
   border: 1px solid #1c1c1a;
-  border-radius: 5px;
+  border-radius: 999px;
   display: inline-flex;
   gap: 14px;
   align-items: center;
@@ -159,7 +159,7 @@ textarea:focus-visible {
   max-width: 360px;
 }
 .login-form h2 {
-  font-size: 49px;
+  font-size: 40px;
   margin-bottom: 15px;
 }
 .login-form .button {
@@ -357,10 +357,10 @@ label small {
   color: #777;
 }
 .stats strong {
-  font-family: "Barlow Condensed", sans-serif;
-  font-size: 55px;
+  font-family: "Inter", Arial, sans-serif;
+  font-size: 44px;
   font-weight: 600;
-  line-height: 1;
+  line-height: 1.15;
 }
 .stats small {
   font-size: 10px;
@@ -385,7 +385,7 @@ label small {
   display: flex;
 }
 .attention h3 {
-  font-family: "DM Sans", sans-serif;
+  font-family: "Inter", Arial, sans-serif;
   font-size: 12px;
   font-weight: 600;
   margin-bottom: 6px;
@@ -889,7 +889,7 @@ td small {
   max-width: 290px;
 }
 .login-story h1 {
-  font-size: clamp(64px, 6vw, 92px);
+  font-size: clamp(44px, 4vw, 64px);
   text-transform: none;
-  line-height: 1;
+  line-height: 1.15;
 }
