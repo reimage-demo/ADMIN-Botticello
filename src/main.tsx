@@ -1,3 +1,4 @@
+import logoUrl from "./assets/botticello-logo.webp";
 import React, { Component, type ReactNode, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
@@ -16,7 +17,6 @@ import {
   ClipboardList,
   CarFront,
   LogOut,
-  ArrowUpRight,
   Plus,
   Search,
   X,
@@ -32,6 +32,15 @@ type RequestRow = {
   phone: string;
   vehicle: string;
   duty: string;
+  vehicleYear?: string;
+  vehicleMake?: string;
+  vehicleModel?: string;
+  vin?: string;
+  mileage?: string;
+  issueArea?: string;
+  issueType?: string;
+  severity?: string;
+  preferredContactMethod?: string;
   service: string;
   description: string;
   status: string;
@@ -79,7 +88,13 @@ const dollars = (n: number) =>
 function Brand() {
   return (
     <div className="brand">
-      BOTTICELLO<small>SHOP MANAGEMENT</small>
+      <img
+        src={logoUrl}
+        width="2170"
+        height="725"
+        alt="Botticello Auto Repair"
+      />
+      <small>SHOP MANAGEMENT</small>
     </div>
   );
 }
@@ -92,13 +107,7 @@ function Login() {
       <section className="login-story">
         <Brand />
         <div>
-          <p className="eyebrow">THE WORK BEHIND THE WORK.</p>
-          <h1>
-            A clear view.
-            <br />A smoother
-            <br />
-            workday.
-          </h1>
+          <h1>Manage the shop.</h1>
           <p>
             Your appointments, estimate requests, and vehicle listings. All in
             one place.
@@ -148,7 +157,7 @@ function Login() {
             </p>
           )}
           <button className="button" disabled={busy}>
-            {busy ? "Signing in…" : "Sign in"} <ArrowUpRight size={16} />
+            {busy ? "Signing in…" : "Sign in"}
           </button>
           <p className="hint">
             Staff access only. For login assistance, contact your website
@@ -274,14 +283,14 @@ function App() {
               <p className="eyebrow">BOTTICELLO AUTO REPAIR</p>
               <h1>
                 {tab === "Overview"
-                  ? "Your shop, at a glance."
+                  ? "Shop overview"
                   : tab === "Vehicles"
                     ? "Cars for sale."
                     : `${tab}.`}
               </h1>
               <p className="muted">
                 {tab === "Overview"
-                  ? "A little organization. A lot more time for the work."
+                  ? "Review incoming requests and current vehicle listings."
                   : tab === "Vehicles"
                     ? "Create listings and control what customers see online."
                     : "Review requests, follow up, and keep work moving."}
@@ -320,9 +329,7 @@ function App() {
                   <strong>
                     {estimates.filter((r) => r.status === "new").length}
                   </strong>
-                  <small>
-                    Ready for your review <ArrowUpRight size={14} />
-                  </small>
+                  <small>Ready for your review</small>
                 </button>
                 <button onClick={() => setTab("Appointments")}>
                   <span>OPEN APPOINTMENTS</span>
@@ -333,24 +340,17 @@ function App() {
                       ).length
                     }
                   </strong>
-                  <small>
-                    Requested and in progress <ArrowUpRight size={14} />
-                  </small>
+                  <small>Requested and in progress</small>
                 </button>
                 <button onClick={() => setTab("Vehicles")}>
                   <span>VEHICLES FOR SALE</span>
                   <strong>
                     {inventory.filter((v) => v.status === "available").length}
                   </strong>
-                  <small>
-                    Published on your website <ArrowUpRight size={14} />
-                  </small>
+                  <small>Published on your website</small>
                 </button>
               </div>
               <div className="attention">
-                <div className="attention-icon">
-                  <ClipboardList size={22} />
-                </div>
                 <div>
                   <h3>
                     {fresh.length
@@ -394,15 +394,13 @@ function App() {
                         {dollars(v.price)}{" "}
                         <span>· {v.mileage.toLocaleString()} mi</span>
                       </p>
-                      <small>
-                        Edit listing <ArrowUpRight size={14} />
-                      </small>
+                      <small>Edit listing</small>
                     </div>
                   </button>
                 ))
               ) : (
                 <Empty
-                  title="Your next listing starts here."
+                  title="No vehicle listings yet."
                   text="Add a vehicle, upload photos, and publish when it’s ready."
                 />
               )}
@@ -484,7 +482,7 @@ function App() {
                               onClick={() => setSelected(r)}
                               aria-label={`Open ${r.name}'s request`}
                             >
-                              <ArrowUpRight size={18} />
+                              View
                             </button>
                           </td>
                         </tr>
@@ -602,6 +600,42 @@ function RequestDetail({ row, close }: { row: RequestRow; close: () => void }) {
           <dd>
             {row.vehicle} · {row.duty} duty
           </dd>
+          {row.vin && (
+            <>
+              <dt>VIN</dt>
+              <dd>{row.vin}</dd>
+            </>
+          )}
+          {row.mileage && (
+            <>
+              <dt>Mileage</dt>
+              <dd>{Number(row.mileage).toLocaleString()} miles</dd>
+            </>
+          )}
+          {row.issueArea && (
+            <>
+              <dt>Issue area</dt>
+              <dd>{row.issueArea}</dd>
+            </>
+          )}
+          {row.issueType && (
+            <>
+              <dt>Issue type</dt>
+              <dd>{row.issueType}</dd>
+            </>
+          )}
+          {row.severity && (
+            <>
+              <dt>Severity</dt>
+              <dd>{row.severity}</dd>
+            </>
+          )}
+          {row.preferredContactMethod && (
+            <>
+              <dt>Contact by</dt>
+              <dd>{row.preferredContactMethod}</dd>
+            </>
+          )}
           <dt>Service</dt>
           <dd>{row.service}</dd>
           {row.preferredDate && (

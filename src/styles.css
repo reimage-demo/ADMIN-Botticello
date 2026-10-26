@@ -313,7 +313,7 @@ label small {
 .connected i {
   width: 6px;
   height: 6px;
-  border-radius: 100%;
+  border-radius: 0;
   background: #588067;
 }
 .workspace main {
@@ -341,7 +341,7 @@ label small {
 .stats button {
   background: #fff;
   border: 1px solid #e3e3de;
-  border-radius: 7px;
+  border-radius: 4px;
   padding: 24px;
   text-align: left;
   display: flex;
@@ -399,7 +399,7 @@ label small {
 .panel {
   background: #fff;
   border: 1px solid #e3e3de;
-  border-radius: 7px;
+  border-radius: 4px;
   overflow: hidden;
 }
 .panel-head {
@@ -589,7 +589,7 @@ td small {
 }
 .dialog {
   border: 1px solid #ddd;
-  border-radius: 9px;
+  border-radius: 4px;
   padding: 0;
   width: 620px;
   max-width: calc(100vw - 30px);
@@ -598,7 +598,6 @@ td small {
 }
 .dialog::backdrop {
   background: #0008;
-  backdrop-filter: blur(3px);
 }
 .modal-head {
   padding: 22px 28px;
@@ -876,4 +875,21 @@ td small {
 }
 .top-actions .quiet {
   font-size: 10px;
+}
+
+.brand img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.login-story .brand {
+  background: #fff;
+  color: #171717;
+  padding: 18px;
+  max-width: 290px;
+}
+.login-story h1 {
+  font-size: clamp(64px, 6vw, 92px);
+  text-transform: none;
+  line-height: 1;
 }
