@@ -17,3 +17,11 @@ Status changes and quotes are saved internally; they do not send email or SMS. S
 Sessions end 30 minutes after authentication and customer views clear at expiry. Every backend data access checks current session validity and admin membership. Five consecutive failed attempts lock the account for 30 minutes. Tokens are kept in sessionStorage, and the portal refuses non-HTTPS public origins. Localhost development pages are allowed; their Convex connections still use HTTPS.
 
 Customer photos are fetched on demand through the authenticated `/admin-photo` endpoint with no-store responses, then displayed as browser blob URLs revoked when the component unmounts. New production hosting origins must be added to the backend ALLOWED_WEB_ORIGINS setting. No customer-data encryption key or password pepper belongs in this repository or in VITE-prefixed settings.
+
+## GitHub Pages deployment
+
+Source: https://github.com/reimage-demo/ADMIN-Botticello
+
+Live portal: https://reimage-demo.github.io/ADMIN-Botticello/
+
+Run `npm run deploy:pages` to build and publish only `dist/` to this repository’s `gh-pages` branch. The admin build uses `VITE_CONVEX_URL` from the environment or `.env.local`. A Lunchbox-style Actions workflow is prepared at `deployment/github-pages-workflow.yml`; enabling it later requires workflow permission for the Reimage GitHub login and the repository secret `VITE_CONVEX_URL`. The public website and backend source live separately in https://github.com/reimage-demo/botticello.
