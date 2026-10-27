@@ -15,14 +15,13 @@ import {
   LayoutDashboard,
   CalendarDays,
   ClipboardList,
-  CarFront,
   LogOut,
-  Plus,
   Search,
   X,
   CheckCircle2,
 } from "lucide-react";
 import "./styles.css";
+import { SecurePhoto, SessionGate, requireSecurePortal } from "./security";
 const api = anyApi;
 type RequestRow = {
   _id: string;
@@ -51,20 +50,8 @@ type RequestRow = {
   quoteMin?: number;
   quoteMax?: number;
   notes: { text: string; at: number }[];
-  photoUrls: (string | null)[];
+  photoRefs: {slot:string}[];
   createdAt: number;
-};
-type Vehicle = {
-  _id?: string;
-  year: number;
-  make: string;
-  model: string;
-  price: number;
-  mileage: number;
-  description: string;
-  status: string;
-  photos: string[];
-  photoUrls?: string[];
 };
 const statuses = [
   "new",
@@ -80,12 +67,6 @@ const date = (n: number) =>
     month: "short",
     day: "numeric",
     timeZone: "America/New_York",
-  }).format(n);
-const dollars = (n: number) =>
-  new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
   }).format(n);
 function Brand() {
   return (
@@ -111,7 +92,7 @@ function Login() {
         <div>
           <h1>Manage the shop.</h1>
           <p>
-            Your appointments, estimate requests, and vehicle listings. All in
+            Your appointments and estimate requests. All in
             one place.
           </p>
         </div>
@@ -131,7 +112,7 @@ function Login() {
                 flow: "signIn",
               });
             } catch {
-              setError("Unable to sign in. Check your email and password.");
+              setError("Unable to sign in. Check your credentials or try again after 30 minutes. Five failed attempts temporarily lock the account.");
             } finally {
               setBusy(false);
             }
@@ -200,15 +181,12 @@ function SignOut() {
   );
 }
 function App() {
-  const authorized = useQuery(api.admin.me);
   const rows = useQuery(api.requests.list) as RequestRow[] | undefined;
-  const inventory = useQuery(api.inventory.list) as Vehicle[] | undefined;
   const [tab, setTab] = useState("Overview"),
     [search, setSearch] = useState(""),
     [filter, setFilter] = useState("all"),
-    [selected, setSelected] = useState<RequestRow | null>(null),
-    [vehicle, setVehicle] = useState<Vehicle | null>(null);
-  if (!authorized || !rows || !inventory)
+    [selected, setSelected] = useState<RequestRow | null>(null);
+  if (!rows)
     return <div className="loading">Loading your shop…</div>;
   const fresh = rows.filter((r) => r.status === "new"),
     estimates = rows.filter((r) => r.kind === "estimate"),
@@ -229,7 +207,6 @@ function App() {
     ["Overview", LayoutDashboard],
     ["Appointments", CalendarDays],
     ["Estimates", ClipboardList],
-    ["Vehicles", CarFront],
   ] as const;
   return (
     <div className="shell">
@@ -286,37 +263,15 @@ function App() {
               <h1>
                 {tab === "Overview"
                   ? "Shop overview"
-                  : tab === "Vehicles"
-                    ? "Cars for sale."
-                    : `${tab}.`}
+                  : `${tab}.`}
               </h1>
               <p className="muted">
                 {tab === "Overview"
-                  ? "Review incoming requests and current vehicle listings."
-                  : tab === "Vehicles"
-                    ? "Create listings and control what customers see online."
-                    : "Review requests, follow up, and keep work moving."}
+                  ? "Review incoming appointments and estimate requests."
+                  : "Review requests, follow up, and keep work moving."}
               </p>
             </div>
-            {tab === "Vehicles" && (
-              <button
-                className="button"
-                onClick={() =>
-                  setVehicle({
-                    year: new Date().getFullYear(),
-                    make: "",
-                    model: "",
-                    price: 0,
-                    mileage: 0,
-                    description: "",
-                    status: "draft",
-                    photos: [],
-                  })
-                }
-              >
-                <Plus size={16} /> Add vehicle
-              </button>
-            )}
+
           </div>
           {tab === "Overview" && (
             <>
@@ -344,13 +299,7 @@ function App() {
                   </strong>
                   <small>Requested and in progress</small>
                 </button>
-                <button onClick={() => setTab("Vehicles")}>
-                  <span>VEHICLES FOR SALE</span>
-                  <strong>
-                    {inventory.filter((v) => v.status === "available").length}
-                  </strong>
-                  <small>Published on your website</small>
-                </button>
+
               </div>
               <div className="attention">
                 <div>
@@ -368,46 +317,6 @@ function App() {
               </div>
             </>
           )}
-          {tab === "Vehicles" ? (
-            <div className="vehicle-grid">
-              {inventory.length ? (
-                inventory.map((v) => (
-                  <button
-                    className="vehicle-card"
-                    key={v._id}
-                    onClick={() => setVehicle(v)}
-                  >
-                    {v.photoUrls?.[0] ? (
-                      <img
-                        src={v.photoUrls[0]}
-                        alt={`${v.year} ${v.make} ${v.model}`}
-                      />
-                    ) : (
-                      <div className="no-photo">
-                        <CarFront size={42} />
-                      </div>
-                    )}
-                    <div>
-                      <span className={`badge ${v.status}`}>{v.status}</span>
-                      <h3>
-                        {v.year} {v.make} {v.model}
-                      </h3>
-                      <p>
-                        {dollars(v.price)}{" "}
-                        <span>· {v.mileage.toLocaleString()} mi</span>
-                      </p>
-                      <small>Edit listing</small>
-                    </div>
-                  </button>
-                ))
-              ) : (
-                <Empty
-                  title="No vehicle listings yet."
-                  text="Add a vehicle, upload photos, and publish when it’s ready."
-                />
-              )}
-            </div>
-          ) : (
             <section className="panel">
               <div className="panel-head">
                 <h2>
@@ -507,7 +416,6 @@ function App() {
                 />
               )}
             </section>
-          )}
         </main>
         <footer className="admin-footer">
           Botticello Auto Repair <span>Shop management</span>
@@ -520,13 +428,7 @@ function App() {
           close={() => setSelected(null)}
         />
       )}
-      {vehicle && (
-        <VehicleEditor
-          key={vehicle._id ?? "new"}
-          vehicle={vehicle}
-          close={() => setVehicle(null)}
-        />
-      )}
+
     </div>
   );
 }
@@ -673,18 +575,7 @@ function RequestDetail({ row, close }: { row: RequestRow; close: () => void }) {
             {row.description || "No additional details."}
           </dd>
         </dl>
-        {row.photoUrls.length > 0 && (
-          <div className="photos">
-            {row.photoUrls.map(
-              (url, i) =>
-                url && (
-                  <a key={url} href={url} target="_blank" rel="noreferrer">
-                    <img src={url} alt={`Customer photo ${i + 1}`} />
-                  </a>
-                ),
-            )}
-          </div>
-        )}
+        {row.photoRefs.length>0&&<div className="photos">{row.photoRefs.map((photo,i)=><SecurePhoto key={photo.slot} requestId={row._id} slot={photo.slot} index={i}/>)}</div>}
         <form
           onSubmit={async (e) => {
             e.preventDefault();
@@ -796,206 +687,11 @@ function RequestDetail({ row, close }: { row: RequestRow; close: () => void }) {
     </Modal>
   );
 }
-function VehicleEditor({
-  vehicle,
-  close,
-}: {
-  vehicle: Vehicle;
-  close: () => void;
-}) {
-  const save = useMutation(api.inventory.save),
-    uploadUrl = useMutation(api.inventory.uploadUrl),
-    [photos, setPhotos] = useState(vehicle.photos),
-    [urls, setUrls] = useState(vehicle.photoUrls ?? []),
-    [busy, setBusy] = useState(false),
-    [error, setError] = useState("");
-  async function upload(files: File[]) {
-    setError("");
-    if (
-      photos.length + files.length > 6 ||
-      files.some(
-        (f) =>
-          f.size > 8 * 1024 * 1024 ||
-          !["image/jpeg", "image/png", "image/webp"].includes(f.type),
-      )
-    ) {
-      setError("Use up to six JPEG, PNG, or WebP photos under 8 MB.");
-      return;
-    }
-    setBusy(true);
-    try {
-      for (const file of files) {
-        const url = await uploadUrl({});
-        const response = await fetch(url, {
-          method: "POST",
-          headers: { "Content-Type": file.type },
-          body: file,
-        });
-        if (!response.ok) throw new Error("Photo upload failed.");
-        const { storageId } = await response.json();
-        setPhotos((p) => [...p, storageId]);
-        setUrls((p) => [...p, URL.createObjectURL(file)]);
-      }
-    } catch {
-      setError("A photo did not upload. Try again.");
-    } finally {
-      setBusy(false);
-    }
-  }
-  return (
-    <Modal title={vehicle._id ? "Edit vehicle" : "Add a vehicle"} close={close}>
-      <form
-        className="detail"
-        onSubmit={async (e) => {
-          e.preventDefault();
-          setBusy(true);
-          setError("");
-          const d = new FormData(e.currentTarget);
-          try {
-            await save({
-              id: vehicle._id,
-              year: Number(d.get("year")),
-              make: d.get("make"),
-              model: d.get("model"),
-              price: Number(d.get("price")),
-              mileage: Number(d.get("mileage")),
-              status: d.get("status"),
-              description: d.get("description"),
-              photos,
-            });
-            close();
-          } catch (err) {
-            setError(
-              err instanceof Error ? err.message : "Unable to save vehicle.",
-            );
-          } finally {
-            setBusy(false);
-          }
-        }}
-      >
-        <div className="form-grid">
-          <label>
-            Year
-            <input
-              name="year"
-              type="number"
-              required
-              min="1900"
-              max={new Date().getFullYear() + 2}
-              defaultValue={vehicle.year}
-            />
-          </label>
-          <label>
-            Make
-            <input
-              name="make"
-              required
-              maxLength={60}
-              defaultValue={vehicle.make}
-            />
-          </label>
-          <label>
-            Model
-            <input
-              name="model"
-              required
-              maxLength={100}
-              defaultValue={vehicle.model}
-            />
-          </label>
-          <label>
-            Status
-            <select name="status" defaultValue={vehicle.status}>
-              {["draft", "available", "sold", "archived"].map((s) => (
-                <option key={s} value={s}>
-                  {s}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            Price ($)
-            <input
-              name="price"
-              type="number"
-              min="0"
-              step="0.01"
-              required
-              defaultValue={vehicle.price}
-            />
-            <small>Use 0 to show “Call for price”.</small>
-          </label>
-          <label>
-            Mileage
-            <input
-              name="mileage"
-              type="number"
-              min="0"
-              required
-              defaultValue={vehicle.mileage}
-            />
-          </label>
-        </div>
-        <label>
-          Description
-          <textarea
-            name="description"
-            maxLength={6000}
-            defaultValue={vehicle.description}
-          />
-        </label>
-        <label>
-          Photos
-          <input
-            type="file"
-            accept="image/jpeg,image/png,image/webp"
-            multiple
-            disabled={busy}
-            onChange={(e) => {
-              void upload([...(e.target.files ?? [])]);
-              e.target.value = "";
-            }}
-          />
-          <small>Up to six photos. First photo is the cover.</small>
-        </label>
-        <div className="photos">
-          {photos.map((id, i) => (
-            <div key={id}>
-              <img src={urls[i]} alt={`Vehicle photo ${i + 1}`} />
-              <button
-                type="button"
-                className="quiet"
-                disabled={busy}
-                onClick={() => {
-                  setPhotos((p) => p.filter((_, j) => i !== j));
-                  setUrls((p) => p.filter((_, j) => i !== j));
-                }}
-              >
-                Remove
-              </button>
-            </div>
-          ))}
-        </div>
-        <p className="hint">
-          Only vehicles marked “available” appear on the public website.
-        </p>
-        {error && (
-          <p className="error" role="alert">
-            {error}
-          </p>
-        )}
-        <button className="button" disabled={busy}>
-          {busy ? "Working…" : "Save vehicle"}
-        </button>
-      </form>
-    </Modal>
-  );
-}
-const url = import.meta.env.VITE_CONVEX_URL;
+const url = requireSecurePortal(import.meta.env.VITE_CONVEX_URL);
 createRoot(document.getElementById("root")!).render(
   url ? (
     <React.StrictMode>
-      <ConvexAuthProvider client={new ConvexReactClient(url)}>
+      <ConvexAuthProvider client={new ConvexReactClient(url)} storage={window.sessionStorage}>
         <Boundary>
           <AuthLoading>
             <div className="loading">Connecting…</div>
@@ -1004,14 +700,14 @@ createRoot(document.getElementById("root")!).render(
             <Login />
           </Unauthenticated>
           <Authenticated>
-            <App />
+            <SessionGate><App /></SessionGate>
           </Authenticated>
         </Boundary>
       </ConvexAuthProvider>
     </React.StrictMode>
   ) : (
     <div className="fallback">
-      Configure VITE_CONVEX_URL to connect the shop portal.
+      Open the portal using HTTPS and configure a secure Convex connection.
     </div>
   ),
 );
