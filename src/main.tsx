@@ -15,6 +15,7 @@ import {
   LayoutDashboard,
   CalendarDays,
   ClipboardList,
+  Car,
   LogOut,
   Search,
   X,
@@ -234,6 +235,17 @@ function App() {
                 )}
             </button>
           ))}
+          <a
+            className="rental-link"
+            href="https://login.rentmect.com/?merchant=botticellos"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Book RentMeCT rental (opens in a new tab)"
+            aria-label="Book RentMeCT rental (opens in a new tab)"
+          >
+            <Car size={18} aria-hidden="true" />
+            <span>Book RentMeCT rental ↗</span>
+          </a>
         </nav>
         <div className="sidebar-bottom">
           <p>
