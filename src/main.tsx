@@ -87,19 +87,8 @@ function Login() {
   const [error, setError] = useState(""),
     [busy, setBusy] = useState(false);
   return (
-    <div className="login">
-      <section className="login-story">
-        <Brand />
-        <div>
-          <h1>Manage the shop.</h1>
-          <p>
-            Your appointments and estimate requests. All in
-            one place.
-          </p>
-        </div>
-        <small>210 South Street · West Hartford, CT</small>
-      </section>
-      <section className="login-form">
+    <main className="login">
+      <section className="login-form" aria-labelledby="login-title">
         <form
           onSubmit={async (e) => {
             e.preventDefault();
@@ -119,9 +108,15 @@ function Login() {
             }
           }}
         >
-          <p className="eyebrow">BOTTICELLO ADMIN</p>
-          <h2>Welcome back.</h2>
-          <p className="muted">Sign in to manage the shop.</p>
+          <img
+            className="login-logo"
+            src={logoUrl}
+            width="2170"
+            height="725"
+            alt="Botticello Auto Repair"
+          />
+          <p className="eyebrow">Admin Portal</p>
+          <h1 id="login-title">Sign in</h1>
           <label>
             Email address
             <input type="email" name="email" required autoComplete="username" />
@@ -149,7 +144,7 @@ function Login() {
           </p>
         </form>
       </section>
-    </div>
+    </main>
   );
 }
 class Boundary extends Component<{ children: ReactNode }, { error: boolean }> {
