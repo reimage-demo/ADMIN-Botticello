@@ -270,15 +270,39 @@ label small {
   flex-direction: column;
   position: fixed;
   height: 100vh;
+  height: 100dvh;
+  overflow-y: auto;
 }
 .sidebar .brand {
   padding-left: 15px;
+}
+.nav-toggle {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  min-height: 44px;
+  margin-top: 24px;
+  padding: 12px 14px;
+  border: 1px solid #e5e5df;
+  border-radius: 5px;
+  background: #fff;
+  font-size: 12px;
+  text-align: left;
+  flex-shrink: 0;
+}
+.nav-toggle:hover,
+.sidebar nav button:not(.active):hover {
+  background: #efefeb;
+}
+.nav-toggle svg,
+.sidebar nav svg {
+  flex-shrink: 0;
 }
 .nav-label {
   font-size: 9px;
   letter-spacing: 0.16em;
   color: #999;
-  margin: 55px 15px 16px;
+  margin: 24px 15px 16px;
 }
 .sidebar nav {
   display: flex;
@@ -335,6 +359,7 @@ label small {
   color: #777;
 }
 .workspace {
+  min-width: 0;
   margin-left: 240px;
   width: calc(100% - 240px);
   min-height: 100vh;
@@ -797,6 +822,10 @@ td small {
   }
   .sidebar .brand {
     padding: 0;
+    max-width: 220px;
+  }
+  .nav-collapsed .sidebar nav {
+    display: none;
   }
   .nav-label,
   .sidebar-bottom {
@@ -826,8 +855,11 @@ td small {
     width: 100%;
   }
   .top {
-    height: 55px;
-    padding-inline: 20px;
+    min-height: 55px;
+    height: auto;
+    padding: 12px 20px;
+    gap: 12px;
+    flex-wrap: wrap;
   }
   .workspace main {
     padding: 30px 18px;
@@ -905,6 +937,45 @@ td small {
   display: flex;
   align-items: center;
   gap: 24px;
+}
+@media (min-width: 761px) {
+  .nav-collapsed .sidebar {
+    width: 76px;
+    padding-inline: 10px;
+  }
+  .nav-collapsed .workspace {
+    margin-left: 76px;
+    width: calc(100% - 76px);
+  }
+  .nav-collapsed .sidebar .brand {
+    padding: 0;
+  }
+  .nav-collapsed .brand small,
+  .nav-collapsed .nav-toggle span,
+  .nav-collapsed .nav-label,
+  .nav-collapsed .nav-text,
+  .nav-collapsed .count,
+  .nav-collapsed .sidebar-bottom p,
+  .nav-collapsed .sidebar-bottom .quiet span {
+    display: none;
+  }
+  .nav-collapsed .sidebar nav {
+    margin-top: 24px;
+  }
+  .nav-collapsed .nav-toggle,
+  .nav-collapsed .sidebar nav button,
+  .nav-collapsed .sidebar nav .rental-link,
+  .nav-collapsed .sidebar-bottom .quiet {
+    justify-content: center;
+    min-height: 44px;
+    padding: 12px;
+  }
+  .nav-collapsed .sidebar-bottom {
+    padding: 24px 0 0;
+  }
+  .nav-collapsed .sidebar-bottom .quiet {
+    width: 100%;
+  }
 }
 .top-actions .quiet {
   font-size: 10px;

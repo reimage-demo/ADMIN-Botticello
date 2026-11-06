@@ -20,6 +20,8 @@ import {
   Search,
   X,
   CheckCircle2,
+  PanelLeftClose,
+  PanelLeftOpen,
 } from "lucide-react";
 import "./styles.css";
 import { SecurePhoto, SessionGate, requireSecurePortal } from "./security";
@@ -171,13 +173,29 @@ class Boundary extends Component<{ children: ReactNode }, { error: boolean }> {
 function SignOut() {
   const { signOut } = useAuthActions();
   return (
-    <button className="quiet" onClick={() => void signOut()}>
-      <LogOut size={16} /> Sign out
+    <button className="quiet" onClick={() => void signOut()} aria-label="Sign out" title="Sign out">
+      <LogOut size={16} aria-hidden="true" /> <span>Sign out</span>
     </button>
   );
 }
 function App() {
   const rows = useQuery(api.requests.list) as RequestRow[] | undefined;
+  const [navCollapsed, setNavCollapsed] = useState(() => {
+    try {
+      return localStorage.getItem("botticello:nav-collapsed") === "true";
+    } catch {
+      return false;
+    }
+  });
+  function toggleNavigation() {
+    const next = !navCollapsed;
+    setNavCollapsed(next);
+    try {
+      localStorage.setItem("botticello:nav-collapsed", String(next));
+    } catch {
+      // Navigation still works when browser storage is unavailable.
+    }
+  }
   const [tab, setTab] = useState("Overview"),
     [search, setSearch] = useState(""),
     [filter, setFilter] = useState("all"),
@@ -205,14 +223,29 @@ function App() {
     ["Estimates", ClipboardList],
   ] as const;
   return (
-    <div className="shell">
+    <div className={`shell${navCollapsed ? " nav-collapsed" : ""}`}>
       <aside className="sidebar">
         <Brand />
+        <button
+          className="nav-toggle"
+          type="button"
+          onClick={toggleNavigation}
+          aria-label={navCollapsed ? "Expand navigation" : "Collapse navigation"}
+          title={navCollapsed ? "Expand navigation" : "Collapse navigation"}
+          aria-expanded={!navCollapsed}
+          aria-controls="shop-navigation"
+        >
+          {navCollapsed ? <PanelLeftOpen size={18} aria-hidden="true" /> : <PanelLeftClose size={18} aria-hidden="true" />}
+          <span>{navCollapsed ? "Expand menu" : "Collapse menu"}</span>
+        </button>
         <p className="nav-label">WORKSPACE</p>
-        <nav>
+        <nav id="shop-navigation" aria-label="Shop navigation">
           {nav.map(([name, Icon]) => (
             <button
               key={name}
+              aria-label={name}
+              title={name}
+              aria-current={tab === name ? "page" : undefined}
               className={tab === name ? "active" : ""}
               onClick={() => {
                 setTab(name);
@@ -220,8 +253,8 @@ function App() {
                 setSearch("");
               }}
             >
-              <Icon size={18} />
-              {name}
+              <Icon size={18} aria-hidden="true" />
+              <span className="nav-text">{name}</span>
               {name === "Estimates" &&
                 estimates.filter((r) => r.status === "new").length > 0 && (
                   <span className="count">
@@ -239,7 +272,7 @@ function App() {
             aria-label="Book RentMeCT rental (opens in a new tab)"
           >
             <Car size={18} aria-hidden="true" />
-            <span>Book RentMeCT rental ↗</span>
+            <span className="nav-text">Book RentMeCT rental ↗</span>
           </a>
         </nav>
         <div className="sidebar-bottom">
