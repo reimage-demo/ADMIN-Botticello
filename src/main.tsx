@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import "./styles.css";
 import { SecurePhoto, SessionGate, requireSecurePortal } from "./security";
+import { AppointmentCalendar } from "./appointment-calendar";
 const api = anyApi;
 type RequestRow = {
   _id: string;
@@ -197,6 +198,7 @@ function App() {
     }
   }
   const [tab, setTab] = useState("Overview"),
+    [appointmentView, setAppointmentView] = useState<"list" | "calendar">("calendar"),
     [search, setSearch] = useState(""),
     [filter, setFilter] = useState("all"),
     [selected, setSelected] = useState<RequestRow | null>(null);
@@ -365,6 +367,12 @@ function App() {
                 <span>{display.length} requests</span>
               </div>
               <div className="tools">
+                {tab === "Appointments" && (
+                  <div className="view-switch" role="group" aria-label="Appointment view">
+                    <button aria-pressed={appointmentView === "list"} onClick={() => setAppointmentView("list")}><ClipboardList size={16} /> List</button>
+                    <button aria-pressed={appointmentView === "calendar"} onClick={() => setAppointmentView("calendar")}><CalendarDays size={16} /> Calendar</button>
+                  </div>
+                )}
                 <label className="search">
                   <Search size={17} />
                   <input
@@ -387,7 +395,9 @@ function App() {
                   ))}
                 </select>
               </div>
-              {display.length ? (
+              {tab === "Appointments" && appointmentView === "calendar" ? (
+                <AppointmentCalendar rows={display} onOpen={setSelected} />
+              ) : display.length ? (
                 <div className="table-scroll">
                   <table>
                     <thead>

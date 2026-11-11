@@ -7,7 +7,8 @@
     "dev": "vite --host 127.0.0.1 --port 5173",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host 127.0.0.1",
-    "deploy:pages": "python3 scripts/deploy-pages.py"
+    "deploy:pages": "python3 scripts/deploy-pages.py",
+    "test": "vitest run"
   },
   "dependencies": {
     "@convex-dev/auth": "latest",
@@ -21,7 +22,9 @@
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "@vitejs/plugin-react": "^4.7.0",
+    "jsdom": "^29.1.1",
     "typescript": "latest",
-    "vite": "^6.4.1"
+    "vite": "^6.4.1",
+    "vitest": "^4.1.12"
   }
 }

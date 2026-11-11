@@ -10,6 +10,8 @@ npm run dev
 
 Preview: http://127.0.0.1:5173. Build: `npm run build`. Deploy only `dist/` to static hosting. Set `VITE_CONVEX_URL=https://sincere-turtle-299.convex.cloud` at build time.
 
+The Appointments tab opens a monthly calendar and can switch to the list. Calendar days show six requests, with an expandable overflow button for additional appointments. Search and status filters apply to both views. Cards open the existing request details; appointments use the customer's requested date and morning/afternoon preference, not a confirmed scheduling time. Today follows America/New_York. Requests without a valid date appear below the calendar. Run `npm test` for calendar date and interaction checks.
+
 The backend lives in the public website repository's root `convex/` directory. This admin repository builds independently and does not import parent-directory files. Public registration is disabled and every administrative query and mutation checks active admin membership on the server.
 
 Status changes and quotes are saved internally; they do not send email or SMS. Staff should contact customers directly. Password recovery is handled by the deployment administrator until an email provider is configured. Never commit credentials or deploy keys.
