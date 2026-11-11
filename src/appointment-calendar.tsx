@@ -65,11 +65,10 @@ export function AppointmentCalendar<T extends CalendarAppointment>({ rows, onOpe
   }
   function card(row: T) {
     return <button key={row._id} className={`calendar-appointment ${row.status}`} onClick={() => onOpen(row)}
-      title={`${row.name} · ${row.vehicle} · ${row.service} · ${row.status.replaceAll("_", " ")}`}
+      title={`${row.name} · ${row.preferredTime || "Time not specified"} · ${row.vehicle} · ${row.service} · ${row.status.replaceAll("_", " ")}`}
       aria-label={`Open ${row.name}'s appointment, ${row.preferredTime || "time not specified"}, ${row.status.replaceAll("_", " ")}`}>
-      <span className="calendar-card-meta"><span className="calendar-time">{row.preferredTime || "Time not specified"}</span><span className="calendar-status">{row.status.replaceAll("_", " ")}</span></span>
       <strong>{row.name}</strong>
-      <span>{row.service}</span>
+      <span className="calendar-time">{row.preferredTime || "Time not specified"}</span>
     </button>;
   }
   const monthCount = rows.filter(row => validDate(row.preferredDate) && row.preferredDate.startsWith(month)).length;

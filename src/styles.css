@@ -999,22 +999,21 @@ td small {
 .calendar-controls button { min-height: 44px; min-width: 44px; }
 .calendar-scroll { overflow-x: auto; }
 .calendar-grid { display: grid; grid-template-columns: repeat(7, minmax(120px, 1fr)); min-width: 840px; }
-.calendar-weekday { padding: 14px 8px; background: #f7f7f5; border-block: 1px solid #e3e3de; font-size: 11px; font-weight: 600; text-align: center; }
-.calendar-day { min-height: 180px; padding: 8px; border-right: 1px solid #e3e3de; border-bottom: 1px solid #e3e3de; min-width: 0; }
+.calendar-weekday { padding: 8px 6px; background: #f7f7f5; border-block: 1px solid #e3e3de; font-size: 11px; font-weight: 600; text-align: center; }
+.calendar-day { min-height: 90px; padding: 5px; border-right: 1px solid #e3e3de; border-bottom: 1px solid #e3e3de; min-width: 0; }
 .calendar-day:nth-child(7n) { border-right: 0; }
 .calendar-day.outside-month { background: #f7f7f5; }
 .calendar-day.is-today { background: #f5f8f3; box-shadow: inset 0 3px #40664a; }
-.calendar-day-heading { display: flex; justify-content: space-between; align-items: center; gap: 5px; min-height: 30px; margin-bottom: 6px; }
+.calendar-day-heading { display: flex; justify-content: space-between; align-items: center; gap: 5px; min-height: 24px; margin-bottom: 3px; }
 .calendar-day-heading time { font-size: 14px; font-weight: 600; }
 .calendar-day-heading span { font-size: 10px; color: #666; }
-.calendar-appointment { display: flex; flex-direction: column; gap: 3px; width: 100%; text-align: left; padding: 8px; margin-bottom: 6px; background: #f0f0ec; border: 1px solid #deded7; border-left: 3px solid #999; border-radius: 4px; font-size: 11px; overflow-wrap: anywhere; }
+.calendar-appointment { display: flex; flex-direction: column; gap: 0; width: 100%; text-align: left; padding: 3px 5px; margin-bottom: 3px; background: #f0f0ec; border: 1px solid #deded7; border-left: 3px solid #999; border-radius: 4px; font-size: 11px; line-height: 14px; overflow-wrap: anywhere; }
 .calendar-appointment:hover { border-color: #555; }
 .calendar-appointment.new { background: #fbf4df; border-left-color: #ad8930; }
 .calendar-appointment.confirmed, .calendar-appointment.completed { background: #edf5ef; border-left-color: #40664a; }
 .calendar-appointment.cancelled { background: #f6eeec; border-left-color: #99615a; }
-.calendar-time, .calendar-status { font-size: 10px; text-transform: capitalize; color: #555; }
-.calendar-card-meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 3px 6px; }
-.calendar-more { width: 100%; min-height: 36px; padding: 8px 4px; border-radius: 4px; background: #e9e9e3; font-size: 11px; font-weight: 600; }
+.calendar-time { font-size: 10px; text-transform: capitalize; color: #555; }
+.calendar-more { width: 100%; min-height: 24px; padding: 4px; border-radius: 4px; background: #e9e9e3; font-size: 11px; font-weight: 600; }
 .calendar-undated { padding: 24px; }
 .calendar-undated > div { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
 @media(max-width:760px) { .view-switch button { flex: 1; } .calendar-toolbar { padding-inline: 15px; } .calendar-hint { padding-inline: 15px; } }
